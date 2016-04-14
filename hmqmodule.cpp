@@ -305,7 +305,7 @@ if ((hash[22] & mask) != zero)
 static void hmq_hash(const unsigned char *input, int len , char *output)
 {
     uint256 hash = hmqhash(input, input + len);
-    memcpy(output, &hash, 64);
+    memcpy(output, &hash, 32);
 }
 
 static PyObject *hmq_getpowhash(PyObject *self, PyObject *args)
@@ -320,7 +320,7 @@ static PyObject *hmq_getpowhash(PyObject *self, PyObject *args)
     if (!PyArg_ParseTuple(args, "S", &input))
         return NULL;
     Py_INCREF(input);
-    output = (char *)PyMem_Malloc(64);
+    output = (char *)PyMem_Malloc(32);
 
 #if PY_MAJOR_VERSION >= 3
     hmq_hash((unsigned char *)PyBytes_AsString((PyObject*) input), Py_SIZE((PyObject*) input), output);
@@ -329,9 +329,9 @@ static PyObject *hmq_getpowhash(PyObject *self, PyObject *args)
 #endif
     Py_DECREF(input);
 #if PY_MAJOR_VERSION >= 3
-    value = Py_BuildValue("y#", output, 64);
+    value = Py_BuildValue("y#", output, 32);
 #else
-    value = Py_BuildValue("s#", output, 64);
+    value = Py_BuildValue("s#", output, 32);
 #endif
     PyMem_Free(output);
     return value;
